@@ -1,6 +1,8 @@
 from __future__ import print_function
 
 import argparse
+from functools import reduce
+import glob
 
 
 class Requirement(object):
@@ -74,8 +76,9 @@ def fix_requirements_txt(argv=None):
     args = parser.parse_args(argv)
 
     retv = 0
+    filenames = reduce(lambda x, y: x + y, map(glob.glob, args.filenames))
 
-    for arg in args.filenames:
+    for arg in filenames:
         with open(arg, 'rb+') as file_obj:
             ret_for_file = fix_requirements(file_obj)
 

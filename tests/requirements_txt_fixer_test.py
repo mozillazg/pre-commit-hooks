@@ -21,13 +21,15 @@ TESTS = (
 
 @pytest.mark.parametrize(('input_s', 'expected_retval', 'output'), TESTS)
 def test_integration(input_s, expected_retval, output, tmpdir):
-    path = os.path.join(tmpdir.strpath, 'file.txt')
+    path_normal = os.path.join(tmpdir.strpath, 'file.txt')
+    path_wildcard = os.path.join(tmpdir.strpath, '*.txt')
 
-    with open(path, 'wb') as file_obj:
-        file_obj.write(input_s)
+    for path in [path_normal, path_wildcard]:
+        with open(path_normal, 'wb') as file_obj:
+            file_obj.write(input_s)
 
-    assert fix_requirements_txt([path]) == expected_retval
-    assert open(path, 'rb').read() == output
+        assert fix_requirements_txt([path]) == expected_retval
+        assert open(path_normal, 'rb').read() == output
 
 
 def test_requirement_object():
